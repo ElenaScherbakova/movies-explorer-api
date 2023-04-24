@@ -1,7 +1,7 @@
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 const serverPromise = require("../app")
-const User = require("../models/users")
+const User = require("../models/user")
 const Movie = require("../models/movies")
 const { randomInt } = require("crypto")
 
@@ -14,6 +14,7 @@ const TEST_MOVIE = {
   image: 'http://fdsfsd.com/erwer',
   nameRU: "Тестовый фильм",
   nameEN: "fd",
+  movieId: 'id',
   country: "USA",
   director: "Greg",
   duration: 120,

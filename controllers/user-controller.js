@@ -1,6 +1,6 @@
 const createError = require("http-errors")
 const errorWrapper = require("./error-wrrapper");
-const User = require("../models/users")
+const User = require("../models/user")
 
 /**
  * возвращает информацию о пользователе (email и имя)

@@ -25,6 +25,7 @@ const userSchema = new Schema({
   owner: requiredId(),
   nameRU: requiredString(),
   nameEN: requiredString(),
+  movieId: requiredString(),
   country: requiredString(),
   director: requiredString(),
   duration: required({ type: Number }),

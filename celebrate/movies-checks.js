@@ -14,6 +14,7 @@ module.exports = {
       image: linkValidator,
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
+      movieId: Joi.string().required(),
       country: Joi.string().required(),
       director: Joi.string().required(),
       duration: Joi.number().required().min(0),
