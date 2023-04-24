@@ -1,3 +1,4 @@
+const createError = require("http-errors")
 const errorWrapper = require("./error-wrrapper")
 const Movie = require("../models/movies")
 
@@ -30,8 +31,11 @@ const getMovies = errorWrapper(async (req, res) => {
  * Обработка ошибок выполнена в errorWrapper.
  */
 const createMovie = errorWrapper(async (req, res) => {
-  const result = await Movie.create(req.body)
-  res.status(200).send(result)
+  const result = await Movie.create({
+    ...req.body,
+    owner: req.user._id,
+  })
+  res.status(201).send(result)
 })
 
 /**
@@ -40,7 +44,19 @@ const createMovie = errorWrapper(async (req, res) => {
  * Обработка ошибок выполнена в errorWrapper.
  */
 const deleteMovie = errorWrapper(async (req, res) => {
-  res.status(200).send()
+  const { _id } = req.user
+  const { movieId } = req.params
+  const movie = await Movie.findById(movieId)
+  if (movie) {
+    if (movie.owner.equals(_id)) {
+      await Movie.findByIdAndDelete(_id)
+      res.status(200).send()
+    } else {
+      throw createError(403, `Не достаточно прав для удаления фильма с id=${movieId}`)
+    }
+  } else {
+    throw createError(404, `Фильм с id=${movieId} не найден`)
+  }
 })
 
 module.exports = {

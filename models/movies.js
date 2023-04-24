@@ -20,12 +20,11 @@ const {
  * */
 
 const userSchema = new Schema({
-  year: requiredString( ),
+  year: requiredString(),
   image: requiredLink(),
   owner: requiredId(),
   nameRU: requiredString(),
   nameEN: requiredString(),
-  movieId: requiredId(),
   country: requiredString(),
   director: requiredString(),
   duration: required({ type: Number }),

@@ -12,10 +12,8 @@ module.exports = {
     [Segments.BODY]: Joi.object().keys({
       year: Joi.string().required().length(4),
       image: linkValidator,
-      owner: Joi.custom(joiIdValidator),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
-      movieId: Joi.custom(joiIdValidator),
       country: Joi.string().required(),
       director: Joi.string().required(),
       duration: Joi.number().required().min(0),

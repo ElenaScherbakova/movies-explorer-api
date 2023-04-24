@@ -10,8 +10,9 @@ const moviesRouter = require("./routes/movies-router")
 const { signIn, signUp } = require("./controllers/auth-controller");
 const { checkToken } = require("./middlewares/auth");
 const { signUpCheck, signInCheck } = require("./celebrate/auth-checks");
+const { errorLogger, requestLogger } = require("./middlewares/logger");
 
-const { PORT = 3000 } = process.env
+const { PORT = 3000, mode } = process.env
 let resolve
 let reject
 connect("mongodb://127.0.0.1:27017/bitfilmsdb", {})
@@ -19,15 +20,20 @@ connect("mongodb://127.0.0.1:27017/bitfilmsdb", {})
     const app = express();
     app.use(cors())
     app.use(express.json())
+    if (mode === "production") {
+      app.use(requestLogger)
+    }
     app.post("/signin", signInCheck, signIn)
     app.post("/signup", signUpCheck, signUp)
     app.use(checkToken)
     app.use("/users/me", userRouter)
     app.use("/movies", moviesRouter)
-
     app.use((req, res, next) => {
       next(createError(404, "Ресурс не найден"))
     })
+    if (mode === "production") {
+      app.use(errorLogger)
+    }
     app.use(errors())
     app.use((err, req, res, next) => {
       if (!res.headersSent) {
@@ -38,7 +44,6 @@ connect("mongodb://127.0.0.1:27017/bitfilmsdb", {})
         } else {
           res.status(500).send("Непредвиденная ошибка сервера")
         }
-        console.error(err)
         // Eslint-error: Expected to return a value at the end of arrow function  consistent-return
         return null
       }
