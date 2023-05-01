@@ -12,7 +12,7 @@ const getMe = errorWrapper(async (req, res) => {
   if (user) {
     res.status(200).send(user.toJSON())
   } else {
-    createError(404, "Пользователь не найден")
+    throw createError(404, "Пользователь не найден")
   }
 })
 

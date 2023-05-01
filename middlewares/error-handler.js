@@ -5,7 +5,7 @@ module.exports = (err, req, res, next) => {
         .status(err.statusCode)
         .send({ message: err.message })
     } else {
-      res.status(500).send("Непредвиденная ошибка сервера")
+      res.status(500).send({ message: "Непредвиденная ошибка сервера" })
     }
     // Eslint-error: Expected to return a value at the end of arrow function  consistent-return
     return null

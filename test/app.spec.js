@@ -65,12 +65,22 @@ describe("App", () => {
   describe("Movies", () => {
     describe("GET /movies", () => {
       it("успех", async () => {
+        const user1 = await signUp(app)
+        const token1 = await signIn(app, user1)
+        const m1 = await createMovie(app, token1, TEST_MOVIE)
+        const m2 = await createMovie(app, token, TEST_MOVIE)
+
         const { statusCode, body } = await request(app)
           .get("/movies")
           .set( "authorization", 'Bearer ' + token)
           .send()
+        Movie.findByIdAndDelete(m1._id)
+        Movie.findByIdAndDelete(m2._id)
+        expect(body.message).to.be.undefined
         expect(statusCode).to.equal(200)
         expect(body).to.be.instanceof(Array)
+        expect(body).to.have.length(1)
+        expect(body[0]._id).to.equal(m2._id)
       })
 
       it("не авторизован", async () => {
@@ -123,7 +133,10 @@ describe("App", () => {
           .delete("/movies/" + movie._id)
           .set( "authorization", 'Bearer ' + token)
           .send()
+        expect(resp.body.message).to.be.undefined
         expect(resp.statusCode).to.equal(200)
+        const m = await Movie.findById(movie._id)
+        expect(m).to.be.null
       })
 
       it("не авторизован", async () => {
@@ -150,6 +163,8 @@ describe("App", () => {
           .set( "authorization", 'Bearer ' + token)
           .send()
         expect(resp.statusCode).to.equal(403)
+        const m = await Movie.findById(_movie._id)
+        expect(m).to.be.not.null
       })
     })
   })

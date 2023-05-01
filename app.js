@@ -24,6 +24,9 @@ connect(`mongodb://127.0.0.1:27017/${DB_NAME}`, {})
     }
     app.post("/signin", signInCheck, signIn)
     app.post("/signup", signUpCheck, signUp)
+    app.get("/env", (req, res) => {
+      res.send({ ...process.env })
+    })
     app.use(checkToken)
     app.use("/users/me", userRouter)
     app.use("/movies", moviesRouter)
